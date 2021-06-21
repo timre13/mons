@@ -3,6 +3,7 @@
 # The MIT License (MIT)
 #
 # Copyright (c) 2018-2019 Thomas "Ventto" Venriès <thomas.venries@gmail.com>
+# Copyright (c) 2021 timre13
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -383,6 +384,7 @@ main() {
         disp_mons="$(list_erase "$(list_front "${plug_mons}")" "$disp_mons")"
         disable_mons "${disp_mons}"
         enable_mon "$(list_front "${plug_mons}")"
+        notify-send "Switched monitor layout to" "Primary only"
         exit
     fi
 
@@ -446,6 +448,7 @@ main() {
             fi
             enable_mon "$(list_get 1 "$plug_mons")"
             disable_mons "$(list_front "$disp_mons")"
+            notify-send "Switched monitor layout to" "Second only"
             exit
         fi
 
@@ -454,6 +457,7 @@ main() {
         "$XRANDR" --auto
 
         if $dFlag ; then
+            notify-send "Switched monitor layout to" "Duplicate"
             "$XRANDR" --output "$(list_get 1 "$plug_mons")" \
                 --same-as "$(list_front "$plug_mons")"
             exit $?
@@ -470,6 +474,7 @@ main() {
                 size="$(echo "$xrandr_out" | tail -n1 | awk '{ print $1 }')"
             fi
 
+            notify-send "Switched monitor layout to" "Mirror"
             "$XRANDR" --output "$(list_get 1 "$plug_mons")" \
                 --auto --scale-from  "$size" \
                 --output "$(list_front "$plug_mons")"
@@ -477,6 +482,7 @@ main() {
         fi
 
         if $eFlag ; then
+            notify-send "Switched monitor layout to" "Extend"
             "$XRANDR" --output "$(list_get 1 "$plug_mons")" \
                 "$(arg2xrandr "$eArg")" "$(list_front "$plug_mons")"
             exit $?
